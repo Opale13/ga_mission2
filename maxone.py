@@ -74,17 +74,16 @@ def select(pop):
                 parents.append(pop[index])
 
     return tuple(parents)
-    
-def main(pop_size: int = 20, iterations: int = 150, mate_function = uniform_mate):
+
+# GA
+def main(pop_size: int, iterations: int, mate_function):
     IND_SIZE = 10
     POP_SIZE = pop_size
     ITERATIONS = iterations
     
-
     # Create initial population
     for i in range(POP_SIZE):
         population.append([random.randrange(2) for i in range(IND_SIZE)])
-
 
     stats = list()
     for i in range(ITERATIONS):
@@ -92,10 +91,12 @@ def main(pop_size: int = 20, iterations: int = 150, mate_function = uniform_mate
         children = mate_function(parents[0], parents[1])
         mutate_children = list(map(mutate, children))
 
+        # Remove worst individuals (2)
         for j in range(2):
             iteration_fitness = list(map(evaluate, population))
             del population[iteration_fitness.index(min(iteration_fitness))]
 
+        # Add children to population
         for child in mutate_children:
             population.append(child)
 
@@ -108,8 +109,11 @@ def main(pop_size: int = 20, iterations: int = 150, mate_function = uniform_mate
 if __name__ == '__main__':
     ITERATIONS = 150
     
-    pop_size_list = [20, 30, 50, 100, 150]
+    # Parameters to change
+    pop_size_list = [20, 50, 100, 150, 200]
     mate_function_list = [uniform_mate, cross_mate]
+
+    # Utils for plot
     mate_function_subplot_list= [211, 212]
     plot_title_list = ["Mean value by iteration for uniform mate", "Mean value by iteration for cross mate"]
     linestyle_list = ['dashed', 'dashdot', 'dotted']
@@ -126,12 +130,10 @@ if __name__ == '__main__':
             stats = main(pop_size, ITERATIONS, mate_function)
             stats_dict[pop_size][mate_function.__name__].extend(stats)
 
-            # print(tabulate(stats, headers=['Gen', 'Mean', 'Min', 'Max']))
-
     
     df = pd.DataFrame.from_dict(stats_dict)
 
-    
+
     for pop_index, pop_size in enumerate(pop_size_list):
         for mate_index, mate_function in enumerate(mate_function_list):
             ax = plt.subplot(mate_function_subplot_list[mate_index])
