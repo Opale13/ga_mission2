@@ -130,8 +130,8 @@ if __name__ == '__main__':
             stats_dict[pop_size][mate_function.__name__].extend(stats)
 
     
+    # Display plots
     df = pd.DataFrame.from_dict(stats_dict)
-
 
     for pop_index, pop_size in enumerate(pop_size_list):
         for mate_index, mate_function in enumerate(mate_function_list):
