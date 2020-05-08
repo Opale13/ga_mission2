@@ -9,6 +9,9 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
+
+ITERATIONS = 150
+IND_SIZE = 5
 PROB_MATING = 0.5
 PROB_MUTATION = 0.2
 
@@ -92,8 +95,6 @@ def genetic_algorithm(pop: list, iterations: int, mate_function):
 
 # Running the simulation.
 if __name__ == '__main__':
-    ITERATIONS = 300
-    IND_SIZE = 10
     
     # Parameters to change
     pop_size_list = [20, 50, 100, 150, 200]
@@ -109,7 +110,7 @@ if __name__ == '__main__':
         if pop_size not in stats_dict:
             stats_dict[pop_size] = dict()
         
-        initial_population = [[random.randrange(2) for i in range(IND_SIZE)] for i in range(pop_size)]
+        initial_population = [[random.randrange(2) for i in range(IND_SIZE)] for j in range(pop_size)]
 
         for mate_function in mate_function_list:
             if mate_function.__name__ not in stats_dict[pop_size]:
@@ -120,7 +121,6 @@ if __name__ == '__main__':
     
     # Display plots
     df = pd.DataFrame.from_dict(stats_dict)
-    print(df)
 
     for pop_index, pop_size in enumerate(pop_size_list):
         for mate_index, mate_function in enumerate(mate_function_list):
